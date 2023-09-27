@@ -12,6 +12,7 @@ object Form1: TForm1
   Font.Style = []
   Position = poScreenCenter
   OnCreate = FormCreate
+  OnDragOver = FormDragOver
   DesignSize = (
     1115
     423)
@@ -48,6 +49,8 @@ object Form1: TForm1
     ScrollBars = ssBoth
     TabOrder = 1
     WordWrap = False
+    ExplicitWidth = 845
+    ExplicitHeight = 182
   end
   object Panel1: TPanel
     Left = 861
@@ -56,6 +59,8 @@ object Form1: TForm1
     Height = 423
     Align = alRight
     TabOrder = 2
+    ExplicitLeft = 859
+    ExplicitHeight = 419
     object Label6: TLabel
       Left = 23
       Top = 48

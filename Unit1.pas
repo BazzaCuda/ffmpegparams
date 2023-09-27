@@ -29,11 +29,13 @@ type
     procedure btnClearClick(Sender: TObject);
     procedure btnClearOutputClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
   private
     function saveToFile(aPath: string): boolean;
     function formatFileSize(const aSize: int64): string;
     function getFileSize(const aFilePath: string): int64;
     function longestLine: integer;
+    procedure WMDropFiles(var msg: TWMDropFiles); message WM_DROPFILES;
     { Private declarations }
   public
     { Public declarations }
@@ -43,6 +45,8 @@ var
   Form1: TForm1;
 
 implementation
+
+uses winAPI.shellAPI;
 
 {$R *.dfm}
 
@@ -122,8 +126,37 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  DragAcceptFiles(handle, True);
   case fileExists(changeFileExt(paramStr(0), '.ini')) of TRUE: cbOutputSwitches.Items.loadFromFile(changeFileExt(paramStr(0), '.ini')); end;
   cbOutputSwitches.itemIndex := cbOutputSwitches.items.count - 1;
 end;
+
+procedure TForm1.FormDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
+begin
+  accept := TRUE;
+end;
+
+procedure TForm1.WMDropFiles(var msg: TWMDropFiles);
+// Allow a media file to be dropped onto the window.
+// The playlist will be entirely refreshed using the contents of this media file's folder.
+var vFilePath: string;
+begin
+  inherited;
+  var hDrop := msg.Drop;
+  try
+    var droppedFileCount := dragQueryFile(hDrop, $FFFFFFFF, nil, 0);
+    for var i := 0 to pred(droppedFileCount) do begin
+      var fileNameLength := dragQueryFile(hDrop, i, nil, 0);
+      setLength(vFilePath, fileNameLength);
+      dragQueryFile(hDrop, i, PChar(vFilePath), fileNameLength + 1);
+
+      memo1.lines.add(vFilePath);
+    end;
+  finally
+    dragFinish(hDrop);
+  end;
+  msg.result := 0;
+end;
+
 
 end.
