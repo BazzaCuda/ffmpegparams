@@ -28,3 +28,5 @@ I use this a lot for converting existing movies to H265 to conserve disk space.
 You can edit the .ini file to add your own commonly-used output switches. The app will automatically select the last one in the file, assuming it to be the most recently-added.
 
 Suggestions for amendments (or pull requests) will be considered.
+
+I will deliver a pre-built release shortly (probably tomorrow), for those that are unable to build this project.
