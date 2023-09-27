@@ -110,21 +110,27 @@ end;
 procedure TForm1.btnGoClick(Sender: TObject);
 var
   FN: string;
+  num: string;
 begin
+  memo2.lines.beginUpdate;
   memo2.clear;
   memo2.lines.loadFromFile(changeFileExt(paramStr(0), '.bat'));
+
+  for var i := memo1.lines.count - 1 downto 0 do
+    case (trim(memo1.lines[i]) = '') OR (NOT fileExists(memo1.lines[i])) of TRUE: memo1.lines.delete(i); end; // remove invalid lines
+
   for var i := memo1.lines.count - 1 downto 0 do begin
-    case trim(memo1.lines[i]) = '' of TRUE: CONTINUE; end;
-    case fileExists(memo1.lines[i]) of FALSE: CONTINUE; end;
     FN := changeFileExt(memo1.lines[i], '');
     FN := FN + ' [c]' + edtFileExt.text;
     var ff := format('@ffmpeg %s %s "%s" %s "%s"', [edtLogLevel.text, edtInputSwitches.text, memo1.lines[i], cbOutputSwitches.text, FN]);
     memo2.lines.insert(6, '@echo.');
-    memo2.lines.insert(6, '@echo ::: ' + extractFileName(memo1.lines[i]) + ': ' + formatFileSize(getFileSize(memo1.lines[i])));
+    num := format('[%.2d/%.2d] ', [i + 1, memo1.lines.count]);
+    memo2.lines.insert(6, '@echo ::: ' + num + extractFileName(memo1.lines[i]) + ': ' + formatFileSize(getFileSize(memo1.lines[i])));
     memo2.lines.insert(7, ff);
   end;
 //  memo2.lines.insert(3, 'mode con cols=' + intToStr(longestLine + 6)); // removed until the problem of the cmd window size has been resolved
 
+  memo2.lines.endUpdate;
   var FP := extractFilePath(memo1.lines[0]);
   FN := saveToFile(FP);
   case chbRunBat.checked of TRUE: shellExecute(0, 'open', PWideChar('"'  + FN + '"'), '', '', SW_SHOW); {doCommandLine(FN);} end;
@@ -146,6 +152,7 @@ procedure TForm1.WMDropFiles(var msg: TWMDropFiles);
 var vFilePath: string;
 begin
   inherited;
+  memo1.lines.beginUpdate;
   var hDrop := msg.Drop;
   try
     var droppedFileCount := dragQueryFile(hDrop, $FFFFFFFF, nil, 0);
@@ -159,6 +166,7 @@ begin
   finally
     dragFinish(hDrop);
   end;
+  memo1.lines.endUpdate;
   msg.result := 0;
 end;
 
