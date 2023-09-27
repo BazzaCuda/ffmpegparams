@@ -47,69 +47,9 @@ var
 
 implementation
 
-uses winAPI.shellAPI, _debugWindow;
+uses winAPI.shellAPI;
 
 {$R *.dfm}
-
-function ExePath: string;
-begin
-  result := ExtractFilePath(ParamStr(0));
-end;
-
-function DoCommandLine(ACommandLIne: string): boolean;
-var
-  StartInfo: TStartupInfo;
-  ProcInfo: TProcessInformation;
-  cmd: string;
-  params: string;
-  posHash: integer;
-  sleepTime: integer;
-begin
-  case trim(ACommandLine) = ''  of TRUE: EXIT; end;
-  case ACommandLine[1]    = ':' of TRUE: EXIT; end;
-
-  FillChar(StartInfo, SizeOf(TStartupInfo), #0);
-  FillChar(ProcInfo, SizeOf(TProcessInformation), #0);
-  StartInfo.cb := SizeOf(TStartupInfo);
-  StartInfo.wShowWindow := SW_HIDE;
-  StartInfo.dwFlags := STARTF_USESHOWWINDOW;
-
-  // $ = time delay
-  case ACommandLine[1] = '$' of
-    TRUE: begin
-            delete(ACommandLine, 1, 1);
-            posHash := pos('$', ACommandLine);
-            sleepTime := StrToInt(copy(ACommandLine, 1, PosHash - 1));
-            delete(ACommandLine, 1, PosHash);
-            sleep(sleepTime);
-          end;
-  end;
-
-  // # = split into cmd and params around second #, or just cmd if only initial # is present
-  // useful for running apps directly from this process rather than getting cmd.exe to spawn them indirectly
-  // default is to run cmd.exe with the entire string as its param.
-  case ACommandLine[1] = '#' of
-    TRUE: begin
-            delete(ACommandLine, 1, 1);
-            posHash := pos('#', ACommandLine);
-            case PosHash > 0 of   TRUE: begin
-                                          params := copy(ACommandLine, PosHash, MAX_PATH);
-                                          params[1] := ' ';
-                                          SetLength(ACommandLine, PosHash - 1);
-                                        end;
-                                 FALSE: params := ''; end;
-            cmd := ACommandLine;
-            StartInfo.wShowWindow := SW_SHOW;
-          end;
-   FALSE: begin
-            cmd := 'c:\windows\system32\cmd.exe';
-            params := '/c ' + ACommandLine;
-          end;
-  end;
-
-  result := CreateProcess(PWideChar(cmd), PWideChar(params), nil, nil, FALSE,
-                          CREATE_NEW_PROCESS_GROUP + NORMAL_PRIORITY_CLASS, nil, PWideChar(exePath), StartInfo, ProcInfo);
-end;
 
 procedure TForm1.btnClearClick(Sender: TObject);
 begin
@@ -203,8 +143,6 @@ begin
 end;
 
 procedure TForm1.WMDropFiles(var msg: TWMDropFiles);
-// Allow a media file to be dropped onto the window.
-// The playlist will be entirely refreshed using the contents of this media file's folder.
 var vFilePath: string;
 begin
   inherited;
