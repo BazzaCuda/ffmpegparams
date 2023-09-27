@@ -111,6 +111,8 @@ begin
   memo2.clear;
   memo2.lines.loadFromFile(changeFileExt(paramStr(0), '.bat'));
   for var i := memo1.lines.count - 1 downto 0 do begin
+    case trim(memo1.lines[i]) = '' of TRUE: CONTINUE; end;
+    case fileExists(memo1.lines[i]) of FALSE: CONTINUE; end;
     FN := changeFileExt(memo1.lines[i], '');
     FN := FN + ' [c]' + edtFileExt.text;
     var ff := format('@ffmpeg %s %s "%s" %s "%s"', [edtLogLevel.text, edtInputSwitches.text, memo1.lines[i], cbOutputSwitches.text, FN]);
