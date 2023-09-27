@@ -181,10 +181,10 @@ object Form1: TForm1
       OnClick = btnClearOutputClick
     end
     object btnGo: TButton
-      Left = 14
-      Top = 326
-      Width = 137
-      Height = 75
+      Left = 0
+      Top = 345
+      Width = 241
+      Height = 70
       Caption = 'Go'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -194,6 +194,16 @@ object Form1: TForm1
       ParentFont = False
       TabOrder = 7
       OnClick = btnGoClick
+    end
+    object chbRunBat: TCheckBox
+      Left = 12
+      Top = 322
+      Width = 141
+      Height = 17
+      Caption = 'Run convert.bat'
+      Checked = True
+      State = cbChecked
+      TabOrder = 8
     end
   end
 end

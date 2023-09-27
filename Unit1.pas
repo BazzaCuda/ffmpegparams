@@ -25,13 +25,14 @@ type
     chbOverwrite: TCheckBox;
     btnClearOutput: TButton;
     btnGo: TButton;
+    chbRunBat: TCheckBox;
     procedure btnGoClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure btnClearOutputClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
   private
-    function saveToFile(aPath: string): boolean;
+    function saveToFile(aPath: string): string;
     function formatFileSize(const aSize: int64): string;
     function getFileSize(const aFilePath: string): int64;
     function longestLine: integer;
@@ -46,9 +47,69 @@ var
 
 implementation
 
-uses winAPI.shellAPI;
+uses winAPI.shellAPI, _debugWindow;
 
 {$R *.dfm}
+
+function ExePath: string;
+begin
+  result := ExtractFilePath(ParamStr(0));
+end;
+
+function DoCommandLine(ACommandLIne: string): boolean;
+var
+  StartInfo: TStartupInfo;
+  ProcInfo: TProcessInformation;
+  cmd: string;
+  params: string;
+  posHash: integer;
+  sleepTime: integer;
+begin
+  case trim(ACommandLine) = ''  of TRUE: EXIT; end;
+  case ACommandLine[1]    = ':' of TRUE: EXIT; end;
+
+  FillChar(StartInfo, SizeOf(TStartupInfo), #0);
+  FillChar(ProcInfo, SizeOf(TProcessInformation), #0);
+  StartInfo.cb := SizeOf(TStartupInfo);
+  StartInfo.wShowWindow := SW_HIDE;
+  StartInfo.dwFlags := STARTF_USESHOWWINDOW;
+
+  // $ = time delay
+  case ACommandLine[1] = '$' of
+    TRUE: begin
+            delete(ACommandLine, 1, 1);
+            posHash := pos('$', ACommandLine);
+            sleepTime := StrToInt(copy(ACommandLine, 1, PosHash - 1));
+            delete(ACommandLine, 1, PosHash);
+            sleep(sleepTime);
+          end;
+  end;
+
+  // # = split into cmd and params around second #, or just cmd if only initial # is present
+  // useful for running apps directly from this process rather than getting cmd.exe to spawn them indirectly
+  // default is to run cmd.exe with the entire string as its param.
+  case ACommandLine[1] = '#' of
+    TRUE: begin
+            delete(ACommandLine, 1, 1);
+            posHash := pos('#', ACommandLine);
+            case PosHash > 0 of   TRUE: begin
+                                          params := copy(ACommandLine, PosHash, MAX_PATH);
+                                          params[1] := ' ';
+                                          SetLength(ACommandLine, PosHash - 1);
+                                        end;
+                                 FALSE: params := ''; end;
+            cmd := ACommandLine;
+            StartInfo.wShowWindow := SW_SHOW;
+          end;
+   FALSE: begin
+            cmd := 'c:\windows\system32\cmd.exe';
+            params := '/c ' + ACommandLine;
+          end;
+  end;
+
+  result := CreateProcess(PWideChar(cmd), PWideChar(params), nil, nil, FALSE,
+                          CREATE_NEW_PROCESS_GROUP + NORMAL_PRIORITY_CLASS, nil, PWideChar(exePath), StartInfo, ProcInfo);
+end;
 
 procedure TForm1.btnClearClick(Sender: TObject);
 begin
@@ -61,10 +122,11 @@ begin
   memo2.clear;
 end;
 
-function TForm1.saveToFile(aPath: string): boolean;
+function TForm1.saveToFile(aPath: string): string;
 const
   convert = 'zzz_convert';
 begin
+  result := aPath + convert + '.bat';
   case chbOverwrite.checked of TRUE: memo2.lines.saveToFile(aPath + convert + '.bat'); end;
   case chbOverwrite.checked of TRUE: EXIT; end;
 
@@ -76,6 +138,7 @@ begin
     FN := convert + intToStr(i) + '.bat';
   end;
   memo2.lines.saveToFile(aPath + FN);
+  result := aPath + FN;
 end;
 
 function TForm1.formatFileSize(const aSize: int64): string;
@@ -123,7 +186,8 @@ begin
 //  memo2.lines.insert(3, 'mode con cols=' + intToStr(longestLine + 6)); // removed until the problem of the cmd window size has been resolved
 
   var FP := extractFilePath(memo1.lines[0]);
-  saveToFile(FP);
+  FN := saveToFile(FP);
+  case chbRunBat.checked of TRUE: shellExecute(0, 'open', PWideChar('"'  + FN + '"'), '', '', SW_SHOW); {doCommandLine(FN);} end;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
