@@ -22,6 +22,7 @@ If you uncheck the "Overwrite convert.bat" option, the program will create "zzz_
 Each converted output file has [c] added to the file name to ensure the input file is not overwritten.
 
 You will need to run the batch file yourself. This app doesn't run it for you.
+Edit: there is now an option to run the batch file immediately.
 
 I use this a lot for converting existing movies to H265 to conserve disk space.
 
