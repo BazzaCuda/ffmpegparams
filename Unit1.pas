@@ -114,7 +114,7 @@ begin
     memo2.lines.insert(6, '@echo ::: ' + extractFileName(memo1.lines[i]) + ': ' + formatFileSize(getFileSize(memo1.lines[i])));
     memo2.lines.insert(7, ff);
   end;
-  memo2.lines.insert(3, 'mode con lines=30 cols=' + intToStr(longestLine + 6));
+  memo2.lines.insert(3, 'mode con cols=' + intToStr(longestLine + 6));
 
   var FP := extractFilePath(memo1.lines[0]);
   saveToFile(FP);
