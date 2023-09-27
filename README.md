@@ -4,7 +4,7 @@ A quick and dirty, but nonetheless very useful, GUI front-end for FFMPEG.
 
 Make sure that ffmpegparams.bat and ffmpegparams.ini are in the same folder as ffmpegparams.exe
 
-The .ini file contains some common examples for the output switches which will be loaded when the program launches.
+The .ini file contains some common examples of ffmpeg output switches and will be loaded when the program launches.
 
 The .bat file contains a skeleton batch file which will report an overall duration time for the entire batch job when it finishes.
 This file is read each time you press the GO button.
