@@ -16,7 +16,7 @@ This file is read each time you press the GO button.
 3. Check the output file extension is to your requirements.
 4. Click GO.
 
-The program creates a "zzz_convert.bat" Windows batch file in the same folder as the first file in your input list.
+The program modifies the skeleton batch file and creates a "zzz_convert.bat" Windows batch file in the same folder as the first file in your input list.
 If you uncheck the "Overwrite convert.bat" option, the program will create "zzz_convert1.bat", "zzz_convert2.bat" etc. instead.
 
 Each converted output file has [c] added to the file name to ensure the input file is not overwritten.
