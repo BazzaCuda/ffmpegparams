@@ -11,7 +11,7 @@ This file is read each time you press the GO button.
 
 **N.B. The program assumes your system path contains the path to your FFMPEG/Bin installation.**
 
-1. Paste a list of full pathnames and filenames into the "Input Files" box.
+1. Paste a list of full pathnames and filenames into the "Input Files" box or drag and drop files from Explorer. Each new set of dropped files will be added to the input list.
 2. Modify the LogLevel, Input Switches and Output Switches as required.
 3. Check the output file extension is to your requirements.
 4. Click GO.
@@ -28,3 +28,5 @@ I use this a lot for converting existing movies to H265 to conserve disk space.
 You can edit the .ini file to add your own commonly-used output switches. The app will automatically select the last one in the file, assuming it to be the most recently-added.
 
 Suggestions for amendments (or pull requests) will be considered.
+
+I will deliver a pre-built release shortly (probably tomorrow), for those that are unable to build this project.
