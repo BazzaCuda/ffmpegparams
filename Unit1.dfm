@@ -163,22 +163,13 @@ object Form1: TForm1
     end
     object chbOverwrite: TCheckBox
       Left = 12
-      Top = 299
+      Top = 267
       Width = 141
       Height = 17
       Caption = 'Overwrite convert.bat'
       Checked = True
       State = cbChecked
       TabOrder = 5
-    end
-    object btnClearOutput: TButton
-      Left = 14
-      Top = 262
-      Width = 75
-      Height = 25
-      Caption = 'Clear Output'
-      TabOrder = 6
-      OnClick = btnClearOutputClick
     end
     object btnGo: TButton
       Left = 0
@@ -192,18 +183,18 @@ object Form1: TForm1
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 7
+      TabOrder = 6
       OnClick = btnGoClick
     end
     object chbRunBat: TCheckBox
       Left = 12
-      Top = 322
+      Top = 298
       Width = 141
       Height = 17
       Caption = 'Run convert.bat'
       Checked = True
       State = cbChecked
-      TabOrder = 8
+      TabOrder = 7
     end
   end
 end

@@ -23,12 +23,10 @@ type
     Label5: TLabel;
     edtFileExt: TEdit;
     chbOverwrite: TCheckBox;
-    btnClearOutput: TButton;
     btnGo: TButton;
     chbRunBat: TCheckBox;
     procedure btnGoClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
-    procedure btnClearOutputClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
   private
@@ -54,11 +52,6 @@ uses winAPI.shellAPI;
 procedure TForm1.btnClearClick(Sender: TObject);
 begin
   memo1.clear;
-  memo2.clear;
-end;
-
-procedure TForm1.btnClearOutputClick(Sender: TObject);
-begin
   memo2.clear;
 end;
 
@@ -122,15 +115,19 @@ begin
   for var i := memo1.lines.count - 1 downto 0 do begin
     FN := changeFileExt(memo1.lines[i], '');
     FN := FN + ' [c]' + edtFileExt.text;
+
     var ff := format('@ffmpeg %s %s "%s" %s "%s"', [edtLogLevel.text, edtInputSwitches.text, memo1.lines[i], cbOutputSwitches.text, FN]);
+
     memo2.lines.insert(6, '@echo.');
     num := format('[%.2d/%.2d] ', [i + 1, memo1.lines.count]);
     memo2.lines.insert(6, '@echo ::: ' + num + extractFileName(memo1.lines[i]) + ': ' + formatFileSize(getFileSize(memo1.lines[i])));
     memo2.lines.insert(7, ff);
   end;
+
 //  memo2.lines.insert(3, 'mode con cols=' + intToStr(longestLine + 6)); // removed until the problem of the cmd window size has been resolved
 
   memo2.lines.endUpdate;
+
   var FP := extractFilePath(memo1.lines[0]);
   FN := saveToFile(FP);
   case chbRunBat.checked of TRUE: shellExecute(0, 'open', PWideChar('"'  + FN + '"'), '', '', SW_SHOW); {doCommandLine(FN);} end;
