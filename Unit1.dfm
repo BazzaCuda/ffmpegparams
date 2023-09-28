@@ -172,7 +172,7 @@ object Form1: TForm1
       TabOrder = 5
     end
     object btnGo: TButton
-      Left = 0
+      Left = 6
       Top = 345
       Width = 241
       Height = 70
