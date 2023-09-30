@@ -35,4 +35,4 @@ Suggestions for amendments (or pull requests) will be considered.
 
 ~~I will deliver a pre-built release shortly (probably tomorrow), for those that are unable to build this project.~~
 
-As promsised: https://github.com/BazzaCuda/ffmpegparams/releases
+As promised: https://github.com/BazzaCuda/ffmpegparams/releases
