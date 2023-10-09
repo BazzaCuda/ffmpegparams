@@ -63,7 +63,7 @@ var
 
 implementation
 
-uses winAPI.shellAPI;
+uses winAPI.shellAPI, system.strUtils;
 
 {$R *.dfm}
 
@@ -138,7 +138,8 @@ begin
 
     memo2.lines.insert(6, '@echo.');
     num := format('[%.2d/%.2d] ', [i + 1, memo1.lines.count]);
-    memo2.lines.insert(6, '@echo ::: ' + num + extractFileName(memo1.lines[i]) + ': ' + formatFileSize(getFileSize(memo1.lines[i])));
+    var noAmps := replaceStr(memo1.Lines[i], '&', '@');
+    memo2.lines.insert(6, '@echo ::: ' + num + extractFileName(noAmps) + ': ' + formatFileSize(getFileSize(noAmps)));
     memo2.lines.insert(7, ff);
   end;
 
