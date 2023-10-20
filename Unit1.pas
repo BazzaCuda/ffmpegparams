@@ -53,6 +53,7 @@ type
     function getFileSize(const aFilePath: string): int64;
     function longestLine: integer;
     procedure WMDropFiles(var msg: TWMDropFiles); message WM_DROPFILES;
+    function shiftKeyDown: boolean;
     { Private declarations }
   public
     { Public declarations }
@@ -164,10 +165,20 @@ begin
   accept := TRUE;
 end;
 
+function TForm1.shiftKeyDown: boolean;
+var vShiftState: TShiftState;
+begin
+  vShiftState   := KeyboardStateToShiftState;
+  result := ssSHIFT in vShiftState;
+end;
+
 procedure TForm1.WMDropFiles(var msg: TWMDropFiles);
 var vFilePath: string;
 begin
   inherited;
+
+  case shiftKeyDown of TRUE: memo1.lines.clear; end;
+
   memo1.lines.beginUpdate;
   var hDrop := msg.Drop;
   try
