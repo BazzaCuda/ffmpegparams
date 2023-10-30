@@ -13,8 +13,8 @@ This file is read each time you press the GO button.
 
 **N.B. The program assumes your system path contains the path to your FFMPEG/Bin installation.**
 
-1. Paste a list of full pathnames and filenames into the "Input Files" box or drag and drop files from Explorer. Each new set of dropped files will be added to the input list.
-2. Modify the LogLevel, Input Switches and Output Switches as required. Alternatively, holding down a shift key while you drop the files will replace the existing list entirely.
+1. Paste a list of full pathnames and filenames into the "Input Files" box or drag and drop files from Explorer. Each new set of dropped files will be added to the input list.  Alternatively, holding down a shift key while you drop the files will replace the existing list entirely.
+2. Modify the LogLevel, Input Switches and Output Switches as required.
 3. Check the output file extension is to your requirements.
 4. Click GO.
 
