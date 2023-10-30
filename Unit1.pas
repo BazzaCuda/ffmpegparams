@@ -48,15 +48,13 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
   private
-    function saveToFile(aPath: string): string;
     function formatFileSize(const aSize: int64): string;
-    function getFileSize(const aFilePath: string): int64;
     function longestLine: integer;
-    procedure WMDropFiles(var msg: TWMDropFiles); message WM_DROPFILES;
+    function saveToFile(aFilePath: string): string;
     function shiftKeyDown: boolean;
-    { Private declarations }
+    function outputFile(aPath: string): string;
+    procedure WMDropFiles(var msg: TWMDropFiles); message WM_DROPFILES;
   public
-    { Public declarations }
   end;
 
 var
@@ -74,7 +72,7 @@ begin
   memo2.clear;
 end;
 
-function TForm1.saveToFile(aPath: string): string;
+function TForm1.outputFile(aPath: string): string;
 const
   convert = 'zzz_convert';
 begin
@@ -89,8 +87,12 @@ begin
     inc(i);
     FN := convert + intToStr(i) + '.bat';
   end;
-  memo2.lines.saveToFile(aPath + FN);
   result := aPath + FN;
+end;
+
+function TForm1.saveToFile(aFilePath: string): string;
+begin
+  memo2.lines.saveToFile(aFilePath);
 end;
 
 function TForm1.formatFileSize(const aSize: int64): string;
@@ -100,16 +102,16 @@ begin
                                                                 FALSE: try result := format('%.2f MB', [aSize / 1024 / 1024]); except end;end;end;
 end;
 
-function TForm1.getFileSize(const aFilePath: string): int64;
+function getFileSize(const aFilename: String): int64;
 var
-  vHandle:  THandle;
-  vRec:     TWin32FindData;
+  info: TWin32FileAttributeData;
 begin
-  vHandle := findFirstFile(PChar(aFilePath), vRec);
-  case vHandle <> INVALID_HANDLE_VALUE of TRUE: begin
-                                                  winAPI.windows.findClose(vHandle);
-                                                  case (vRec.dwFileAttributes and FILE_ATTRIBUTE_DIRECTORY) = 0 of TRUE:
-                                                    result := (int64(vRec.nFileSizeHigh) shl 32) + vRec.nFileSizeLow; end;end;end;
+  result := 0;
+
+  case GetFileAttributesEx(PWideChar(aFileName), getFileExInfoStandard, @info) of FALSE: EXIT; end;
+
+  int64Rec(result).hi := info.nFileSizeHigh;
+  int64Rec(result).lo := info.nFileSizeLow;
 end;
 
 function TForm1.longestLine: integer;
@@ -140,16 +142,21 @@ begin
     memo2.lines.insert(6, '@echo.');
     num := format('[%.2d/%.2d] ', [i + 1, memo1.lines.count]);
     var noAmps := replaceStr(memo1.Lines[i], '&', '@');
-    memo2.lines.insert(6, '@echo ::: ' + num + extractFileName(noAmps) + ': ' + formatFileSize(getFileSize(noAmps)));
+    memo2.lines.insert(6, '@echo ::: ' + num + extractFileName(noAmps) + ': ' + formatFileSize(getFileSize(memo1.Lines[i])));
     memo2.lines.insert(7, ff);
   end;
 
 //  memo2.lines.insert(3, 'mode con cols=' + intToStr(longestLine + 6)); // removed until the problem of the cmd window size has been resolved
 
+  var FP := extractFilePath(memo1.lines[0]);
+
+  FN := outputFile(FP);
+
+  memo2.lines.add('del ' + FN + ' /Q');
   memo2.lines.endUpdate;
 
-  var FP := extractFilePath(memo1.lines[0]);
-  FN := saveToFile(FP);
+  saveToFile(FN);
+
   case chbRunBat.checked of TRUE: shellExecute(0, 'open', PWideChar('"'  + FN + '"'), '', '', SW_SHOW); {doCommandLine(FN);} end;
 end;
 

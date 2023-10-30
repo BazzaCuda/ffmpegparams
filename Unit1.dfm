@@ -2,8 +2,8 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'ffmpeg params'
-  ClientHeight = 423
-  ClientWidth = 1115
+  ClientHeight = 427
+  ClientWidth = 1117
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,8 +14,8 @@ object Form1: TForm1
   OnCreate = FormCreate
   OnDragOver = FormDragOver
   DesignSize = (
-    1115
-    423)
+    1117
+    427)
   TextHeight = 13
   object Label1: TLabel
     Left = 15
@@ -43,24 +43,20 @@ object Form1: TForm1
   object Memo2: TMemo
     Left = 8
     Top = 229
-    Width = 847
-    Height = 186
+    Width = 849
+    Height = 190
     Anchors = [akLeft, akTop, akRight, akBottom]
     ScrollBars = ssBoth
     TabOrder = 1
     WordWrap = False
-    ExplicitWidth = 845
-    ExplicitHeight = 182
   end
   object Panel1: TPanel
-    Left = 861
+    Left = 863
     Top = 0
     Width = 254
-    Height = 423
+    Height = 427
     Align = alRight
     TabOrder = 2
-    ExplicitLeft = 859
-    ExplicitHeight = 419
     object Label6: TLabel
       Left = 23
       Top = 48
@@ -166,7 +162,7 @@ object Form1: TForm1
       Top = 267
       Width = 141
       Height = 17
-      Caption = 'Overwrite convert.bat'
+      Caption = 'Overwrite batch file'
       Checked = True
       State = cbChecked
       TabOrder = 5
@@ -191,7 +187,7 @@ object Form1: TForm1
       Top = 298
       Width = 141
       Height = 17
-      Caption = 'Run convert.bat'
+      Caption = 'Run batch file'
       Checked = True
       State = cbChecked
       TabOrder = 7
