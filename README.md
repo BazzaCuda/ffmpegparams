@@ -9,7 +9,7 @@ Make sure that ffmpegparams.bat and ffmpegparams.ini are in the same folder as f
 The .ini file contains some common examples of ffmpeg output switches and will be loaded when the program launches.
 
 The .bat file contains a skeleton batch file which will report an overall duration time for the entire batch job when it finishes.
-This file is read each time you press the GO button.
+This file is read each time you press the GO button and is used to create the batch process for your files.
 
 **N.B. The program assumes your system path contains the path to your FFMPEG/Bin installation.**
 
