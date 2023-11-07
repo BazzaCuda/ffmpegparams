@@ -141,7 +141,8 @@ begin
 
     memo2.lines.insert(6, '@echo.');
     num := format('[%.2d/%.2d] ', [i + 1, memo1.lines.count]);
-    var noAmps := replaceStr(memo1.Lines[i], '&', '@');
+    var noAmps := replaceStr(memo1.Lines[i], ' & ', ' and ');
+        noAmps := replaceStr(memo1.Lines[i], '&', 'and');
     memo2.lines.insert(6, '@echo ::: ' + num + extractFileName(noAmps) + ': ' + formatFileSize(getFileSize(memo1.Lines[i])));
     memo2.lines.insert(7, ff);
   end;
@@ -152,7 +153,7 @@ begin
 
   FN := outputFile(FP);
 
-  memo2.lines.add('del ' + FN + ' /Q');
+  memo2.lines.add('(goto) 2>nul & del "%~f0"');
   memo2.lines.endUpdate;
 
   saveToFile(FN);

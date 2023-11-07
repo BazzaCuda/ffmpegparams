@@ -22,8 +22,7 @@ uses
   Vcl.Forms,
   Unit1 in 'Unit1.pas' {Form1},
   Vcl.Themes,
-  Vcl.Styles,
-  _debugWindow in '..\DebugWindow\_debugWindow.pas';
+  Vcl.Styles;
 
 {$R *.res}
 
