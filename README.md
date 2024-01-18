@@ -34,6 +34,6 @@ You can edit the .ini file to add your own commonly-used output switches. The ap
 
 Suggestions for amendments (or pull requests) will be considered.
 
-~~I will deliver a pre-built release shortly (probably tomorrow), for those that are unable to build this project.~~
+~~I will deliver a pre-built release shortly (probably tomorrow), for those who are unable to build this project.~~
 
 As promised: https://github.com/BazzaCuda/ffmpegparams/releases
