@@ -1,7 +1,8 @@
 # ffmpegparams
  
 A quick and dirty, but nonetheless very useful, GUI front-end for FFMPEG.
-![Clipboard Image](https://github.com/BazzaCuda/ffmpegparams/assets/22550919/e54ae331-43bd-4750-9891-7999d1973812)
+![Clipboard Image (1)](https://github.com/BazzaCuda/ffmpegparams/assets/22550919/bfab40bf-1efb-4a86-a6f4-a22ff9e9715a)
+
 
 
 Make sure that ffmpegparams.bat and ffmpegparams.ini are in the same folder as ffmpegparams.exe
