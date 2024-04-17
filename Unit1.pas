@@ -1,5 +1,5 @@
 {   Minimalist Media Player
-    Copyright (C) 2021 Baz Cuda <bazzacuda@gmx.com>
+    Copyright (C) 2021 Baz Cuda
     https://github.com/BazzaCuda/ffmpegparams
 
     This program is free software; you can redistribute it and/or modify
@@ -34,15 +34,15 @@ type
     btnClear: TButton;
     Label6: TLabel;
     edtLogLevel: TEdit;
-    Label3: TLabel;
-    edtInputSwitches: TEdit;
-    Label4: TLabel;
-    cbOutputSwitches: TComboBox;
     Label5: TLabel;
     edtFileExt: TEdit;
     chbOverwrite: TCheckBox;
     btnGo: TButton;
     chbRunBat: TCheckBox;
+    Label3: TLabel;
+    edtInputSwitches: TEdit;
+    Label4: TLabel;
+    cbOutputSwitches: TComboBox;
     procedure btnGoClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
