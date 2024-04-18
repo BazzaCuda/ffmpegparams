@@ -1,7 +1,8 @@
 # ffmpegparams
  
 A quick and dirty, but nonetheless very useful, GUI front-end for FFMPEG.
-![Clipboard Image (1)](https://github.com/BazzaCuda/ffmpegparams/assets/22550919/bfab40bf-1efb-4a86-a6f4-a22ff9e9715a)
+![Clipboard Image (4)](https://github.com/BazzaCuda/ffmpegparams/assets/22550919/f1ba8402-8d42-4afc-b87d-f4a49081d605)
+
 
 
 
