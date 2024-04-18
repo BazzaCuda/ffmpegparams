@@ -43,16 +43,31 @@ type
     edtInputSwitches: TEdit;
     Label4: TLabel;
     cbOutputSwitches: TComboBox;
+    lblCmdLineExe: TLabel;
+    cbCmdLineExe: TComboBox;
+    Label7: TLabel;
+    Label8: TLabel;
     procedure btnGoClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
+    procedure cbCmdLineExeChange(Sender: TObject);
   private
-    function formatFileSize(const aSize: int64): string;
-    function longestLine: integer;
-    function saveToFile(aFilePath: string): string;
-    function shiftKeyDown: boolean;
-    function outputFile(aPath: string): string;
+    cmdLineExe: string;
+    function  beginBatFile: boolean;
+    function  closeBatFile: boolean;
+    function  findINIFiles(FP: string): string;
+    function  getBatFN(aPath: string): string;
+    function  getOutputFN(inputFN: string; ext: string): string;
+    function  loadINIFile(FP: string; exeName: string): string;
+    function  longestLine: integer;
+    function  noAmps(FN: string): string;
+    function  processInputFN(inputFN: string; fileNum: integer; maxFiles: integer): boolean;
+    function  removeInvalidFNs: boolean;
+    function  runBatFile(FN: string; run: boolean): boolean;
+    function  saveBatFile(aFilePath: string): string;
+    function  setCaption(cmdLineExe: string): boolean;
+    function  setLogLevel(cmdLineExe: string): boolean;
     procedure WMDropFiles(var msg: TWMDropFiles); message WM_DROPFILES;
   public
   end;
@@ -64,38 +79,10 @@ implementation
 
 uses winAPI.shellAPI, system.strUtils;
 
-{$R *.dfm}
-
-procedure TForm1.btnClearClick(Sender: TObject);
-begin
-  memo1.clear;
-  memo2.clear;
-end;
-
-function TForm1.outputFile(aPath: string): string;
 const
-  convert = 'zzz_convert';
-begin
-  result := aPath + convert + '.bat';
-  case chbOverwrite.checked of TRUE: memo2.lines.saveToFile(aPath + convert + '.bat'); end;
-  case chbOverwrite.checked of TRUE: EXIT; end;
+  FFMPEG = 'ffmpeg';
 
-  var i: integer := 0;
-  var FN: string;
-  FN := convert + '.bat';
-  while fileExists(aPath + FN) do begin
-    inc(i);
-    FN := convert + intToStr(i) + '.bat';
-  end;
-  result := aPath + FN;
-end;
-
-function TForm1.saveToFile(aFilePath: string): string;
-begin
-  memo2.lines.saveToFile(aFilePath);
-end;
-
-function TForm1.formatFileSize(const aSize: int64): string;
+function formatFileSize(const aSize: int64): string;
 begin
  case aSize >= 1052266987 of  TRUE: try result := format('%.3f GB', [aSize / 1024 / 1024 / 1024]); except end;  // >= 0.98 of 1GB
                              FALSE: case aSize < 1024 * 1024 of  TRUE: try result := format('%d KB', [trunc(aSize / 1024)]); except end;
@@ -114,58 +101,88 @@ begin
   int64Rec(result).lo := info.nFileSizeLow;
 end;
 
-function TForm1.longestLine: integer;
+function shiftKeyDown: boolean;
+var vShiftState: TShiftState;
 begin
-  result := 90;
-  for var i := 0 to memo2.lines.count - 1 do
-    case (pos(':::', memo2.lines[i]) > 0) AND (length(memo2.lines[i]) > result) of TRUE: result := length(memo2.lines[i]); end;
+  vShiftState   := KeyboardStateToShiftState;
+  result := ssSHIFT in vShiftState;
+end;
+
+{$R *.dfm}
+
+function TForm1.beginBatFile: boolean;
+begin
+  memo2.lines.beginUpdate;
+  memo2.clear;
+  memo2.lines.loadFromFile(changeFileExt(paramStr(0), '.bat'));
+end;
+
+procedure TForm1.btnClearClick(Sender: TObject);
+begin
+  memo1.clear;
 end;
 
 procedure TForm1.btnGoClick(Sender: TObject);
 var
   FN: string;
-  num: string;
 begin
-  memo2.lines.beginUpdate;
-  memo2.clear;
-  memo2.lines.loadFromFile(changeFileExt(paramStr(0), '.bat'));
+  beginBatFile;
 
-  for var i := memo1.lines.count - 1 downto 0 do
-    case (trim(memo1.lines[i]) = '') OR (NOT fileExists(memo1.lines[i])) of TRUE: memo1.lines.delete(i); end; // remove invalid lines
+  case removeInvalidFNs of FALSE: EXIT; end;
 
-  for var i := memo1.lines.count - 1 downto 0 do begin
-    FN := changeFileExt(memo1.lines[i], '');
-    FN := FN + ' [c]' + edtFileExt.text;
-
-    var ff := format('@ffmpeg %s %s "%s" %s "%s"', [edtLogLevel.text, edtInputSwitches.text, memo1.lines[i], cbOutputSwitches.text, FN]);
-
-    memo2.lines.insert(6, '@echo.');
-    num := format('[%.2d/%.2d] ', [i + 1, memo1.lines.count]);
-    var noAmps := replaceStr(memo1.Lines[i], ' & ', ' and ');
-        noAmps := replaceStr(memo1.Lines[i], '&', 'and');
-    memo2.lines.insert(6, '@echo ::: ' + num + extractFileName(noAmps) + ': ' + formatFileSize(getFileSize(memo1.Lines[i])));
-    memo2.lines.insert(7, ff);
-  end;
-
-//  memo2.lines.insert(3, 'mode con cols=' + intToStr(longestLine + 6)); // removed until the problem of the cmd window size has been resolved
+  for var i := memo1.lines.count - 1 downto 0 do processInputFN(memo1.lines[i], i + 1, memo1.lines.count);
 
   var FP := extractFilePath(memo1.lines[0]);
 
-  FN := outputFile(FP);
+  FN := getBatFN(FP);
 
+  closeBatFile;
+
+  saveBatFile(FN);
+
+  runBatFile(FN, chbRunBat.checked);
+end;
+
+procedure TForm1.cbCmdLineExeChange(Sender: TObject);
+begin
+  cmdLineExe := loadINIFile(extractFilePath(paramStr(0)), cbCmdLineExe.items[cbCmdLineExe.itemIndex]);
+  setCaption(cmdLineExe);
+  setLogLevel(cmdLineExe);
+end;
+
+function TForm1.closeBatFile: boolean;
+begin
   memo2.lines.add('(goto) 2>nul & del "%~f0"');
   memo2.lines.endUpdate;
+end;
 
-  saveToFile(FN);
+function TForm1.findINIFiles(FP: string): string;
+var
+  SR: TSearchRec;
+  RC: integer;
+begin
+  cbCmdLineExe.items.clear;
 
-  case chbRunBat.checked of TRUE: shellExecute(0, 'open', PWideChar('"'  + FN + '"'), '', '', SW_SHOW); {doCommandLine(FN);} end;
+  RC := findFirst(FP + '*.ini', faAnyFile - faDirectory - faSysFile - faHidden, SR);
+
+  while RC = 0 do begin
+    cbCmdLineExe.items.add(copy(SR.name, 1, length(SR.name) - 4));
+    RC := findNext(SR);
+  end;
+
+  lblCmdLineExe.visible  := cbCmdLineExe.items.count > 1;
+  cbCmdLineExe.visible   := cbCmdLineExe.items.count > 1;
+  cbCmdLineExe.itemIndex := cbCmdLineExe.items.indexOf(FFMPEG);
+
+  result := loadINIFile(FP, FFMPEG);
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   DragAcceptFiles(handle, True);
-  case fileExists(changeFileExt(paramStr(0), '.ini')) of TRUE: cbOutputSwitches.Items.loadFromFile(changeFileExt(paramStr(0), '.ini')); end;
-  cbOutputSwitches.itemIndex := cbOutputSwitches.items.count - 1;
+  case fileExists(changeFileExt(paramStr(0), '.ini')) of TRUE: renameFile(changeFileExt(paramStr(0), '.ini'), extractFilePath(paramStr(0)) + 'ffmpeg.ini'); end; // rename legacy ini
+  cmdLineExe := findINIFiles(extractFilePath(paramStr(0)));
+  setCaption(cmdLineExe);
 end;
 
 procedure TForm1.FormDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
@@ -173,11 +190,91 @@ begin
   accept := TRUE;
 end;
 
-function TForm1.shiftKeyDown: boolean;
-var vShiftState: TShiftState;
+function TForm1.getBatFN(aPath: string): string;
+const
+  convert = 'zzz_convert';
 begin
-  vShiftState   := KeyboardStateToShiftState;
-  result := ssSHIFT in vShiftState;
+  result := aPath + convert + '.bat';
+  case chbOverwrite.checked of TRUE: memo2.lines.saveToFile(aPath + convert + '.bat'); end;
+  case chbOverwrite.checked of TRUE: EXIT; end;
+
+  var i: integer := 0;
+  var FN: string;
+  FN := convert + '.bat';
+  while fileExists(aPath + FN) do begin
+    inc(i);
+    FN := convert + intToStr(i) + '.bat';
+  end;
+  result := aPath + FN;
+end;
+
+function TForm1.getOutputFN(inputFN: string; ext: string): string;
+begin
+  result := changeFileExt(inputFN, '');
+  result := result + ' [c]' + ext;
+end;
+
+function TForm1.loadINIFile(FP: string; exeName: string): string;
+begin
+  cbOutputSwitches.clear;
+  case fileExists(FP + exeName + '.ini') of TRUE: cbOutputSwitches.items.loadFromFile(FP + exeName + '.ini'); end;
+  cbOutputSwitches.itemIndex := cbOutputSwitches.items.count - 1;
+  result := exeName;
+end;
+
+function TForm1.longestLine: integer;
+begin
+  result := 90;
+  for var i := 0 to memo2.lines.count - 1 do
+    case (pos(':::', memo2.lines[i]) > 0) AND (length(memo2.lines[i]) > result) of TRUE: result := length(memo2.lines[i]); end;
+end;
+
+function TForm1.noAmps(FN: string): string;
+begin
+  result := replaceStr(FN, ' & ', ' and ');
+  result := replaceStr(FN, '&', 'and');
+end;
+
+function TForm1.processInputFN(inputFN: string; fileNum: integer; maxFiles: integer): boolean;
+begin
+  var FN := getOutputFN(inputFN, edtFileExt.text);
+
+  var ff := format('@%s %s %s "%s" %s "%s"', [cmdLineExe, edtLogLevel.text, edtInputSwitches.text, inputFN, cbOutputSwitches.text, FN]);
+
+  memo2.lines.insert(6, '@echo.');
+  var numStr := format('[%.2d/%.2d] ', [fileNum, maxFiles]);
+  memo2.lines.insert(6, '@echo ::: ' + numStr + extractFileName(noAmps(inputFN)) + ': ' + formatFileSize(getFileSize(inputFN)));
+  memo2.lines.insert(7, ff);
+end;
+
+function TForm1.removeInvalidFNs: boolean;
+var noAmps: string;
+begin
+  for var i := memo1.lines.count - 1 downto 0 do
+    case (trim(memo1.lines[i]) = '') OR (NOT fileExists(memo1.lines[i])) of TRUE: memo1.lines.delete(i); end;
+
+  result := memo1.lines.count > 0;
+end;
+
+function TForm1.runBatFile(FN: string; run: boolean): boolean;
+begin
+  case run of TRUE: shellExecute(0, 'open', PWideChar('"'  + FN + '"'), '', '', SW_SHOW); end;
+end;
+
+function TForm1.saveBatFile(aFilePath: string): string;
+begin
+  memo2.lines.saveToFile(aFilePath);
+end;
+
+function TForm1.setCaption(cmdLineExe: string): boolean;
+begin
+  caption := cmdLineExe + ' params';
+end;
+
+function TForm1.setLogLevel(cmdLineExe: string): boolean;
+begin
+  case cmdLineExe = FFMPEG of  TRUE: edtLogLevel.text := '-loglevel error';
+                              FALSE: edtLogLevel.text := ''; end;
 end;
 
 procedure TForm1.WMDropFiles(var msg: TWMDropFiles);
@@ -204,6 +301,5 @@ begin
   memo1.lines.endUpdate;
   msg.result := 0;
 end;
-
 
 end.
