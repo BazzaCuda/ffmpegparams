@@ -47,6 +47,8 @@ type
     cbCmdLineExe: TComboBox;
     Label7: TLabel;
     Label8: TLabel;
+    chbPauseAtEnd: TCheckBox;
+    chbShutdown: TCheckBox;
     procedure btnGoClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -152,7 +154,10 @@ end;
 
 function TForm1.closeBatFile: boolean;
 begin
-  memo2.lines.add('(goto) 2>nul & del "%~f0"');
+  case chbShutdown.checked of  TRUE: memo2.lines.add('shutdown /s /f /t 0');
+                              FALSE: case chbPauseAtEnd.checked of TRUE: memo2.lines.add('@pause'); end;end;
+
+  memo2.lines.add('(goto) 2>nul & del "%~f0"'); // deletes the batch file.
   memo2.lines.endUpdate;
 end;
 

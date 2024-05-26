@@ -3100,7 +3100,7 @@ object Form1: TForm1
     ExplicitHeight = 502
     object Label6: TLabel
       Left = 19
-      Top = 278
+      Top = 232
       Width = 45
       Height = 13
       Caption = 'Log Level'
@@ -3113,14 +3113,14 @@ object Form1: TForm1
     end
     object Label5: TLabel
       Left = 19
-      Top = 322
+      Top = 276
       Width = 103
       Height = 13
       Caption = 'Output File Extension'
     end
     object lblCmdLineExe: TLabel
       Left = 19
-      Top = 233
+      Top = 187
       Width = 64
       Height = 13
       Caption = 'Cmd Line Exe'
@@ -3136,7 +3136,7 @@ object Form1: TForm1
     end
     object edtLogLevel: TEdit
       Left = 12
-      Top = 292
+      Top = 246
       Width = 124
       Height = 24
       Font.Charset = DEFAULT_CHARSET
@@ -3150,7 +3150,7 @@ object Form1: TForm1
     end
     object edtFileExt: TEdit
       Left = 12
-      Top = 338
+      Top = 292
       Width = 57
       Height = 24
       Font.Charset = DEFAULT_CHARSET
@@ -3164,7 +3164,7 @@ object Form1: TForm1
     end
     object chbOverwrite: TCheckBox
       Left = 12
-      Top = 369
+      Top = 323
       Width = 141
       Height = 17
       Caption = 'Overwrite batch file'
@@ -3189,7 +3189,7 @@ object Form1: TForm1
     end
     object chbRunBat: TCheckBox
       Left = 12
-      Top = 400
+      Top = 350
       Width = 141
       Height = 17
       Caption = 'Run batch file'
@@ -3199,7 +3199,7 @@ object Form1: TForm1
     end
     object cbCmdLineExe: TComboBox
       Left = 12
-      Top = 247
+      Top = 201
       Width = 124
       Height = 24
       Style = csDropDownList
@@ -3215,6 +3215,24 @@ object Form1: TForm1
       OnChange = cbCmdLineExeChange
       Items.Strings = (
         'ffmpeg')
+    end
+    object chbPauseAtEnd: TCheckBox
+      Left = 12
+      Top = 377
+      Width = 97
+      Height = 17
+      Caption = 'Pause At End'
+      Checked = True
+      State = cbChecked
+      TabOrder = 7
+    end
+    object chbShutdown: TCheckBox
+      Left = 12
+      Top = 402
+      Width = 105
+      Height = 17
+      Caption = 'Shutdown at End'
+      TabOrder = 8
     end
   end
   object edtInputSwitches: TEdit
