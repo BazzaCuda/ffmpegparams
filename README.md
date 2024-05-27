@@ -10,7 +10,7 @@ UPDATE: rejigged to work with multiple command line utilities similar to FFMPEG
 
 
 
-Make sure that ffmpegparams.bat and ffmpegparams.ini are in the same folder as ffmpegparams.exe
+Make sure that ffmpegparams.bat and ffmpeg.ini are in the same folder as ffmpegparams.exe
 
 The .ini file contains some common examples of ffmpeg output switches and will be loaded when the program launches.
 
