@@ -5,10 +5,7 @@ A quick and dirty, but nonetheless very useful, GUI front-end for FFMPEG.
 UPDATE: rejigged to work with multiple command line utilities similar to FFMPEG
 - for details, see release v2.0.0 https://github.com/BazzaCuda/ffmpegparams/releases/tag/v2.0.0
 
-![Clipboard Image (4)](https://github.com/BazzaCuda/ffmpegparams/assets/22550919/f1ba8402-8d42-4afc-b87d-f4a49081d605)
-
-
-
+![Clipboard Image (1)](https://github.com/BazzaCuda/ffmpegparams/assets/22550919/a0a056a7-76b6-48ce-905b-cce1372fd5a5)
 
 Make sure that ffmpegparams.bat and ffmpeg.ini are in the same folder as ffmpegparams.exe
 
