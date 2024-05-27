@@ -3126,7 +3126,7 @@ object Form1: TForm1
       Caption = 'Cmd Line Exe'
     end
     object btnClear: TButton
-      Left = 3
+      Left = 7
       Top = 25
       Width = 133
       Height = 25
