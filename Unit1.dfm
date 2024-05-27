@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 0
   Caption = 'ffmpeg params'
   ClientHeight = 506
-  ClientWidth = 1117
+  ClientWidth = 1122
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -3021,7 +3021,7 @@ object Form1: TForm1
   OnCreate = FormCreate
   OnDragOver = FormDragOver
   DesignSize = (
-    1117
+    1122
     506)
   TextHeight = 13
   object Label1: TLabel
@@ -3080,7 +3080,7 @@ object Form1: TForm1
   object Memo2: TMemo
     Left = 8
     Top = 318
-    Width = 956
+    Width = 961
     Height = 180
     Anchors = [akLeft, akTop, akRight, akBottom]
     ScrollBars = ssBoth
@@ -3090,7 +3090,7 @@ object Form1: TForm1
     ExplicitHeight = 176
   end
   object Panel1: TPanel
-    Left = 970
+    Left = 975
     Top = 0
     Width = 147
     Height = 506
@@ -3099,8 +3099,8 @@ object Form1: TForm1
     ExplicitLeft = 968
     ExplicitHeight = 502
     object Label6: TLabel
-      Left = 19
-      Top = 232
+      Left = 15
+      Top = 208
       Width = 45
       Height = 13
       Caption = 'Log Level'
@@ -3112,21 +3112,21 @@ object Form1: TForm1
       ParentFont = False
     end
     object Label5: TLabel
-      Left = 19
-      Top = 276
+      Left = 15
+      Top = 252
       Width = 103
       Height = 13
       Caption = 'Output File Extension'
     end
     object lblCmdLineExe: TLabel
-      Left = 19
-      Top = 187
+      Left = 15
+      Top = 163
       Width = 64
       Height = 13
       Caption = 'Cmd Line Exe'
     end
     object btnClear: TButton
-      Left = 7
+      Left = 3
       Top = 25
       Width = 133
       Height = 25
@@ -3135,8 +3135,8 @@ object Form1: TForm1
       OnClick = btnClearClick
     end
     object edtLogLevel: TEdit
-      Left = 12
-      Top = 246
+      Left = 8
+      Top = 222
       Width = 124
       Height = 24
       Font.Charset = DEFAULT_CHARSET
@@ -3149,8 +3149,8 @@ object Form1: TForm1
       Text = '-loglevel error'
     end
     object edtFileExt: TEdit
-      Left = 12
-      Top = 292
+      Left = 8
+      Top = 268
       Width = 57
       Height = 24
       Font.Charset = DEFAULT_CHARSET
@@ -3163,8 +3163,8 @@ object Form1: TForm1
       Text = '.mp4'
     end
     object chbOverwrite: TCheckBox
-      Left = 12
-      Top = 323
+      Left = 8
+      Top = 299
       Width = 141
       Height = 17
       Caption = 'Overwrite batch file'
@@ -3188,8 +3188,8 @@ object Form1: TForm1
       OnClick = btnGoClick
     end
     object chbRunBat: TCheckBox
-      Left = 12
-      Top = 350
+      Left = 8
+      Top = 326
       Width = 141
       Height = 17
       Caption = 'Run batch file'
@@ -3198,8 +3198,8 @@ object Form1: TForm1
       TabOrder = 5
     end
     object cbCmdLineExe: TComboBox
-      Left = 12
-      Top = 201
+      Left = 8
+      Top = 177
       Width = 124
       Height = 24
       Style = csDropDownList
@@ -3217,8 +3217,8 @@ object Form1: TForm1
         'ffmpeg')
     end
     object chbPauseAtEnd: TCheckBox
-      Left = 12
-      Top = 377
+      Left = 8
+      Top = 353
       Width = 97
       Height = 17
       Caption = 'Pause At End'
@@ -3227,12 +3227,22 @@ object Form1: TForm1
       TabOrder = 7
     end
     object chbShutdown: TCheckBox
-      Left = 12
+      Left = 8
       Top = 402
       Width = 105
       Height = 17
       Caption = 'Shutdown at End'
       TabOrder = 8
+    end
+    object chbDeleteBatchFile: TCheckBox
+      Left = 8
+      Top = 378
+      Width = 133
+      Height = 17
+      Caption = 'Delete batch file at End'
+      Checked = True
+      State = cbChecked
+      TabOrder = 9
     end
   end
   object edtInputSwitches: TEdit
