@@ -15,6 +15,7 @@ The .bat file contains a skeleton batch file which will report an overall durati
 This file is read each time you press the GO button and is used to create the batch process for your files.
 
 **N.B. The program assumes your system path contains the path to your FFMPEG/Bin installation.**
+Alternatively, grab the copy of ffmpeg.exe that ships with [`MMP - Minimalist Media Player`](https://github.com/BazzaCuda/MinimalistMediaPlayerX) and include it in the the same folder as ffmpegparams.exe
 
 1. Paste a list of full pathnames and filenames into the "Input Files" box or drag and drop files from Explorer. Each new set of dropped files will be added to the input list.  Alternatively, holding down a shift key while you drop the files will replace the existing list entirely.
 2. Modify the LogLevel, Input Switches and Output Switches as required.
