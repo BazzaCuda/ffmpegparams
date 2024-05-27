@@ -23,7 +23,7 @@ Alternatively, grab the copy of ffmpeg.exe that ships with [`MMP - Minimalist Me
 4. Click GO.
 
 The program modifies the skeleton batch file and creates a "zzz_convert.bat" Windows batch file in the same folder as the first file in your input list.
-If you uncheck the "Overwrite convert.bat" option, the program will create "zzz_convert1.bat", "zzz_convert2.bat" etc. instead, each time you click GO.
+If you _uncheck_ the "Overwrite convert.bat" option, the program will create "zzz_convert1.bat", "zzz_convert2.bat" etc. instead, each time you click GO.
 This allows you to setup multiple batch jobs in multiple folders before running them.
 
 Each converted output file has [c] added to the file name to ensure the input file is not overwritten.
