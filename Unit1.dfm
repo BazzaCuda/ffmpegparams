@@ -2,8 +2,8 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'ffmpeg params'
-  ClientHeight = 506
-  ClientWidth = 1122
+  ClientHeight = 510
+  ClientWidth = 1124
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -3021,8 +3021,8 @@ object Form1: TForm1
   OnCreate = FormCreate
   OnDragOver = FormDragOver
   DesignSize = (
-    1122
-    506)
+    1124
+    510)
   TextHeight = 13
   object Label1: TLabel
     Left = 16
@@ -3053,13 +3053,14 @@ object Form1: TForm1
     Caption = 'Output Switches'
   end
   object Label7: TLabel
-    Left = 269
+    Left = 133
     Top = 8
-    Width = 579
+    Width = 626
     Height = 13
     Caption = 
-      ' (Drag and drop from Explorer. SHIFT replaces contents with drop' +
-      'ped files, otherwise dropped files are added to the list)'
+      ' (Paste, or Drag and drop from Explorer. SHIFT replaces contents' +
+      ' with dropped files, otherwise dropped files are added to the li' +
+      'st)'
   end
   object Label8: TLabel
     Left = 269
@@ -3067,6 +3068,13 @@ object Form1: TForm1
     Width = 169
     Height = 13
     Caption = '(Recreated each time GO is clicked)'
+  end
+  object Label9: TLabel
+    Left = 253
+    Top = 203
+    Width = 216
+    Height = 13
+    Caption = '(place additional input switches before the -i)'
   end
   object Memo1: TMemo
     Left = 8
@@ -3076,28 +3084,29 @@ object Form1: TForm1
     ScrollBars = ssBoth
     TabOrder = 0
     WordWrap = False
+    OnChange = Memo1Change
   end
   object Memo2: TMemo
     Left = 8
     Top = 318
-    Width = 961
-    Height = 180
+    Width = 963
+    Height = 184
     Anchors = [akLeft, akTop, akRight, akBottom]
     ScrollBars = ssBoth
     TabOrder = 1
     WordWrap = False
-    ExplicitWidth = 954
-    ExplicitHeight = 176
+    ExplicitWidth = 961
+    ExplicitHeight = 180
   end
   object Panel1: TPanel
-    Left = 975
+    Left = 977
     Top = 0
     Width = 147
-    Height = 506
+    Height = 510
     Align = alRight
     TabOrder = 2
-    ExplicitLeft = 968
-    ExplicitHeight = 502
+    ExplicitLeft = 975
+    ExplicitHeight = 506
     object Label6: TLabel
       Left = 15
       Top = 208
@@ -3162,19 +3171,9 @@ object Form1: TForm1
       TabOrder = 2
       Text = '.mp4'
     end
-    object chbOverwrite: TCheckBox
-      Left = 8
-      Top = 299
-      Width = 141
-      Height = 17
-      Caption = 'Overwrite batch file'
-      Checked = True
-      State = cbChecked
-      TabOrder = 3
-    end
     object btnGo: TButton
       Left = 7
-      Top = 425
+      Top = 435
       Width = 133
       Height = 70
       Caption = 'Go'
@@ -3184,18 +3183,8 @@ object Form1: TForm1
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 4
+      TabOrder = 3
       OnClick = btnGoClick
-    end
-    object chbRunBat: TCheckBox
-      Left = 8
-      Top = 326
-      Width = 141
-      Height = 17
-      Caption = 'Run batch file'
-      Checked = True
-      State = cbChecked
-      TabOrder = 5
     end
     object cbCmdLineExe: TComboBox
       Left = 8
@@ -3211,38 +3200,82 @@ object Form1: TForm1
       Font.Style = []
       ParentFont = False
       Sorted = True
-      TabOrder = 6
+      TabOrder = 4
       OnChange = cbCmdLineExeChange
       Items.Strings = (
         'ffmpeg')
     end
-    object chbPauseAtEnd: TCheckBox
-      Left = 8
-      Top = 353
-      Width = 97
-      Height = 17
-      Caption = 'Pause At End'
-      Checked = True
-      State = cbChecked
-      TabOrder = 7
+    object btnFFmpeg: TButton
+      Left = 17
+      Top = 72
+      Width = 113
+      Height = 49
+      Caption = 'FFmpeg'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 5
+      Visible = False
+      OnClick = btnFFmpegClick
     end
-    object chbShutdown: TCheckBox
-      Left = 8
-      Top = 402
-      Width = 105
-      Height = 17
-      Caption = 'Shutdown at End'
-      TabOrder = 8
-    end
-    object chbDeleteBatchFile: TCheckBox
-      Left = 8
-      Top = 378
-      Width = 133
-      Height = 17
-      Caption = 'Delete batch file at End'
-      Checked = True
-      State = cbChecked
-      TabOrder = 9
+    object pnlBoxes: TPanel
+      Left = 0
+      Top = 303
+      Width = 147
+      Height = 128
+      BevelOuter = bvNone
+      TabOrder = 6
+      object chbOverwrite: TCheckBox
+        Left = 9
+        Top = 3
+        Width = 141
+        Height = 17
+        Caption = 'Overwrite batch file'
+        Checked = True
+        State = cbChecked
+        TabOrder = 0
+      end
+      object chbRunBat: TCheckBox
+        Left = 9
+        Top = 29
+        Width = 141
+        Height = 17
+        Caption = 'Run batch file'
+        Checked = True
+        State = cbChecked
+        TabOrder = 1
+      end
+      object chbPauseAtEnd: TCheckBox
+        Left = 9
+        Top = 56
+        Width = 97
+        Height = 17
+        Caption = 'Pause At End'
+        Checked = True
+        State = cbChecked
+        TabOrder = 2
+      end
+      object chbDeleteBatchFile: TCheckBox
+        Left = 9
+        Top = 83
+        Width = 133
+        Height = 17
+        Caption = 'Delete batch file at End'
+        Checked = True
+        State = cbChecked
+        TabOrder = 3
+      end
+      object chbShutdown: TCheckBox
+        Left = 9
+        Top = 110
+        Width = 105
+        Height = 17
+        Caption = 'Shutdown at End'
+        TabOrder = 4
+      end
     end
   end
   object edtInputSwitches: TEdit

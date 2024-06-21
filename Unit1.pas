@@ -36,9 +36,7 @@ type
     edtLogLevel: TEdit;
     Label5: TLabel;
     edtFileExt: TEdit;
-    chbOverwrite: TCheckBox;
     btnGo: TButton;
-    chbRunBat: TCheckBox;
     Label3: TLabel;
     edtInputSwitches: TEdit;
     Label4: TLabel;
@@ -47,14 +45,21 @@ type
     cbCmdLineExe: TComboBox;
     Label7: TLabel;
     Label8: TLabel;
+    btnFFmpeg: TButton;
+    Label9: TLabel;
+    pnlBoxes: TPanel;
+    chbOverwrite: TCheckBox;
+    chbRunBat: TCheckBox;
     chbPauseAtEnd: TCheckBox;
-    chbShutdown: TCheckBox;
     chbDeleteBatchFile: TCheckBox;
+    chbShutdown: TCheckBox;
     procedure btnGoClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
     procedure cbCmdLineExeChange(Sender: TObject);
+    procedure btnFFmpegClick(Sender: TObject);
+    procedure Memo1Change(Sender: TObject);
   private
     cmdLineExe: string;
     function  beginBatFile: boolean;
@@ -123,6 +128,14 @@ end;
 procedure TForm1.btnClearClick(Sender: TObject);
 begin
   memo1.clear;
+end;
+
+procedure TForm1.btnFFmpegClick(Sender: TObject);
+begin
+  var vLink := memo1.lines[0];
+  var vPath := includeTrailingBackslash(memo2.lines[0]);
+  var vFn   := vPath + cbOutputSwitches.text + edtFileExt.text;
+  shellExecute(0, 'open', 'ffmpeg.exe', PWideChar('-i "' + vLink + '" "' + vFN + '"'), PWideChar(vPath), SW_SHOW);
 end;
 
 procedure TForm1.btnGoClick(Sender: TObject);
@@ -235,6 +248,35 @@ begin
   result := 90;
   for var i := 0 to memo2.lines.count - 1 do
     case (pos(':::', memo2.lines[i]) > 0) AND (length(memo2.lines[i]) > result) of TRUE: result := length(memo2.lines[i]); end;
+end;
+
+procedure TForm1.Memo1Change(Sender: TObject);
+begin
+  case memo1.lines.count = 0 of TRUE: EXIT; end;
+  btnFFmpeg.visible := pos('.m3u8', lowerCase(memo1.lines[0])) > 0;
+
+  btnGo.visible   := NOT btnFFmpeg.visible;
+
+  label6.visible        := btnGo.visible;
+  label7.visible        := btnGo.visible;
+  label8.visible        := btnGo.visible;
+  label9.visible        := btnGo.visible;
+  lblCmdLineExe.visible := btnGo.visible;
+  cbCmdLineExe.visible  := btnGo.visible;
+  edtLogLevel.visible   := btnGo.visible;
+  pnlBoxes.visible      := btnGo.visible;
+
+  case btnFFmpeg.visible of  TRUE:  begin
+                                      label4.caption        := 'Output File Name without extension';
+                                      label2.caption        := 'Output folder';
+                                      cbOutputSwitches.text := 'filename without extension';
+                                    end;
+                            FALSE:  begin
+                                      label4.caption := 'Output Switches';
+                                      label2.caption := 'Output Batch File';
+                                      case cbOutputSwitches.items.count > 0 of   TRUE: cbOutputSwitches.text := cbOutputSwitches.items[cbOutputSwitches.items.count - 1];
+                                                                                FALSE: cbOutputSwitches.text := ''; end;
+                                    end;end;
 end;
 
 function TForm1.noAmps(FN: string): string;
