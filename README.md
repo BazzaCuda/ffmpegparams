@@ -1,6 +1,10 @@
 # ffmpegparams
 
 Release v2.0.2: paste an internet URL for a .m3u8 file and the UI will change to allow you to quickly specify a download location and filename for the captured stream and then run FFmpeg directly in a command prompt window. See release notes.
+
+N.B. If you create the default zzz_convert.bat file and, while it's running, you change your mind about how you've set the `Pause at End`, `Delete batch file at End`, or `Shutdown at End` checkboxes, you can change them!
+Leave `Overwrite batch file` checked and uncheck `Run batch file` so you don't start a second batch job running. Click Go again. This will overwrite your running batch file.
+Because of the way Windows reads batch files, your changes at the end of the .bat file will be read when the command processor gets to them.
  
 A quick and dirty, but nonetheless very useful, GUI front-end for FFMPEG.
 
@@ -43,3 +47,6 @@ Suggestions for amendments (or pull requests) will be considered.
 ~~I will deliver a pre-built release shortly (probably tomorrow), for those who are unable to build this project.~~
 
 As promised: https://github.com/BazzaCuda/ffmpegparams/releases
+
+It's been a real trip down memory lane writing code that's as bad as this (#FeelingNostalgic) - at some point I'm going to have to rewrite it as it's already starting to get annoying :D
+I'm tempted to go to the opposite extreme and completely over-engineer it, with polymorphism and dependency injection, etc., just for the fun of it!
