@@ -1,4 +1,6 @@
 # ffmpegparams
+
+Release v2.0.2: paste an internet URL for a .m3u8 file and the UI will change to allow you to quickly specify a download location and filename for the captured stream and then run FFmpeg directly in a command prompt window. See release notes.
  
 A quick and dirty, but nonetheless very useful, GUI front-end for FFMPEG.
 
