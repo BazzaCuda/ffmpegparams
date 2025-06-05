@@ -135,7 +135,8 @@ begin
   var vLink := memo1.lines[0];
   var vPath := includeTrailingBackslash(memo2.lines[0]);
   var vFn   := vPath + cbOutputSwitches.text + edtFileExt.text;
-  shellExecute(0, 'open', 'ffmpeg.exe', PWideChar('-i "' + vLink + '" "' + vFN + '"'), PWideChar(vPath), SW_SHOW);
+  var vFF   := extractFilePath(paramStr(0)) + 'ffmpeg.exe';
+  shellExecute(0, 'open', pWideChar(vFF), PWideChar('-i "' + vLink + '" "' + vFN + '"'), PWideChar(vPath), SW_SHOW);
 end;
 
 procedure TForm1.btnGoClick(Sender: TObject);
