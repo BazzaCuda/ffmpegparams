@@ -150,6 +150,8 @@ begin
 
   case removeInvalidFNs of FALSE: EXIT; end;
 
+  memo2.lines.insert(6, '@echo %time%');
+
   for var i := memo1.lines.count - 1 downto 0 do processInputFN(memo1.lines[i], i + 1, memo1.lines.count);
 
   var FP := extractFilePath(memo1.lines[0]);
@@ -296,11 +298,12 @@ begin
   var ff := format('@%s %s %s "%s" %s "%s"', [cmdLineExe, edtLogLevel.text, edtInputSwitches.text, inputFN, cbOutputSwitches.text, FN]);
 
   memo2.lines.insert(6, '@echo.');
-  memo2.lines.insert(6, '@echo %time%');
+//  memo2.lines.insert(6, '@echo %time%');
   var numStr := format('[%.2d/%.2d] ', [fileNum, maxFiles]);
   memo2.lines.insert(6, '@echo ::: ' + numStr + extractFileName(noAmps(inputFN)) + ': ' + formatFileSize(getFileSize(inputFN)));
-  memo2.lines.insert(7, ff);
-  memo2.lines.insert(7, '@echo %time%');
+  memo2.lines.insert(6, '@echo %time%');
+  memo2.lines.insert(8, ff);
+//  memo2.lines.insert(7, '@echo %time%');
 end;
 
 function TForm1.removeInvalidFNs: boolean;
