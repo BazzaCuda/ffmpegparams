@@ -22,11 +22,13 @@ uses
   Vcl.Forms,
   Unit1 in 'Unit1.pas' {Form1},
   Vcl.Themes,
-  Vcl.Styles;
+  Vcl.Styles,
+  _debugWindow in '..\DebugWindow\_debugWindow.pas';
 
 {$R *.res}
 
 begin
+//  debugClear;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Charcoal Dark Slate');

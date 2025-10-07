@@ -3095,8 +3095,6 @@ object Form1: TForm1
     ScrollBars = ssBoth
     TabOrder = 1
     WordWrap = False
-    ExplicitWidth = 961
-    ExplicitHeight = 180
   end
   object Panel1: TPanel
     Left = 977
@@ -3105,8 +3103,6 @@ object Form1: TForm1
     Height = 510
     Align = alRight
     TabOrder = 2
-    ExplicitLeft = 975
-    ExplicitHeight = 506
     object Label6: TLabel
       Left = 15
       Top = 208

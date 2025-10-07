@@ -85,7 +85,7 @@ var
 
 implementation
 
-uses winAPI.shellAPI, system.strUtils;
+uses winAPI.shellAPI, system.strUtils, _debugWindow;
 
 const
   FFMPEG = 'ffmpeg';
@@ -137,6 +137,9 @@ begin
   var vFn   := vPath + cbOutputSwitches.text + edtFileExt.text;
   var vFF   := extractFilePath(paramStr(0)) + 'ffmpeg.exe';
   shellExecute(0, 'open', pWideChar(vFF), PWideChar('-i "' + vLink + '" "' + vFN + '"'), PWideChar(vPath), SW_SHOW);
+//  debug(pWideChar(vFF));
+//  debug('-i "' + vLink + '"');
+//  debug('"' + vFN + '"');
 end;
 
 procedure TForm1.btnGoClick(Sender: TObject);
@@ -293,9 +296,11 @@ begin
   var ff := format('@%s %s %s "%s" %s "%s"', [cmdLineExe, edtLogLevel.text, edtInputSwitches.text, inputFN, cbOutputSwitches.text, FN]);
 
   memo2.lines.insert(6, '@echo.');
+  memo2.lines.insert(6, '@echo %time%');
   var numStr := format('[%.2d/%.2d] ', [fileNum, maxFiles]);
   memo2.lines.insert(6, '@echo ::: ' + numStr + extractFileName(noAmps(inputFN)) + ': ' + formatFileSize(getFileSize(inputFN)));
   memo2.lines.insert(7, ff);
+  memo2.lines.insert(7, '@echo %time%');
 end;
 
 function TForm1.removeInvalidFNs: boolean;
