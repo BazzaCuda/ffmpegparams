@@ -298,12 +298,10 @@ begin
   var ff := format('@%s %s %s "%s" %s "%s"', [cmdLineExe, edtLogLevel.text, edtInputSwitches.text, inputFN, cbOutputSwitches.text, FN]);
 
   memo2.lines.insert(6, '@echo.');
-//  memo2.lines.insert(6, '@echo %time%');
   var numStr := format('[%.2d/%.2d] ', [fileNum, maxFiles]);
   memo2.lines.insert(6, '@echo ::: ' + numStr + extractFileName(noAmps(inputFN)) + ': ' + formatFileSize(getFileSize(inputFN)));
   memo2.lines.insert(6, '@echo %time%');
   memo2.lines.insert(8, ff);
-//  memo2.lines.insert(7, '@echo %time%');
 end;
 
 function TForm1.removeInvalidFNs: boolean;
