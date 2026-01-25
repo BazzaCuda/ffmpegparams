@@ -137,9 +137,6 @@ begin
   var vFn   := vPath + cbOutputSwitches.text + edtFileExt.text;
   var vFF   := extractFilePath(paramStr(0)) + 'ffmpeg.exe';
   shellExecute(0, 'open', pWideChar(vFF), PWideChar('-i "' + vLink + '" "' + vFN + '"'), PWideChar(vPath), SW_SHOW);
-//  debug(pWideChar(vFF));
-//  debug('-i "' + vLink + '"');
-//  debug('"' + vFN + '"');
 end;
 
 procedure TForm1.btnGoClick(Sender: TObject);
@@ -150,7 +147,7 @@ begin
 
   case removeInvalidFNs of FALSE: EXIT; end;
 
-  memo2.lines.insert(6, '@echo %time%');
+//  memo2.lines.insert(6, '@echo %time% :::');
 
   for var i := memo1.lines.count - 1 downto 0 do processInputFN(memo1.lines[i], i + 1, memo1.lines.count);
 
@@ -297,11 +294,20 @@ begin
 
   var ff := format('@%s %s %s "%s" %s "%s"', [cmdLineExe, edtLogLevel.text, edtInputSwitches.text, inputFN, cbOutputSwitches.text, FN]);
 
-  memo2.lines.insert(6, '@echo.');
+  memo2.lines.insert(12, '');
+  memo2.lines.insert(12, ':: ===');
+  memo2.lines.insert(12, '@echo.');
+  memo2.lines.insert(12, '@echo.');
+  memo2.lines.insert(12, '@echo %time% :::');
+  memo2.lines.insert(12, '@echo encoded in %message%');
+  memo2.lines.insert(12, 'call :elapsedTime ffmpegStart ffmpegEnd message');
+  memo2.lines.insert(12, 'call :recordTime ffmpegEnd');
+  memo2.lines.insert(12, 'call :recordTime ffmpegStart');
   var numStr := format('[%.2d/%.2d] ', [fileNum, maxFiles]);
-  memo2.lines.insert(6, '@echo ::: ' + numStr + extractFileName(noAmps(inputFN)) + ': ' + formatFileSize(getFileSize(inputFN)));
-  memo2.lines.insert(6, '@echo %time%');
-  memo2.lines.insert(8, ff);
+  memo2.lines.insert(12, '@echo ' + numStr + extractFileName(noAmps(inputFN)) + ': ' + formatFileSize(getFileSize(inputFN)));
+  memo2.lines.insert(12, '@echo %time% :::');
+  memo2.lines.insert(12, ':: ===');
+  memo2.lines.insert(16, ff);
 end;
 
 function TForm1.removeInvalidFNs: boolean;
