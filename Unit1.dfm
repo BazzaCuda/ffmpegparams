@@ -3151,7 +3151,7 @@ object Form1: TForm1
       Font.Style = []
       ParentFont = False
       TabOrder = 1
-      Text = '-loglevel error'
+      Text = '-loglevel info'
     end
     object edtFileExt: TEdit
       Left = 8

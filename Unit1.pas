@@ -308,6 +308,7 @@ begin
   memo2.lines.insert(12, '@echo %time% :::');
   memo2.lines.insert(12, ':: ===');
   memo2.lines.insert(16, ff);
+  memo2.lines.insert(16, format('@%s "%s" %s', ['ffprobe -v error -select_streams v:0 -show_entries format=duration -of ini', inputFN, '2>&1 | find "duration"']));
 end;
 
 function TForm1.removeInvalidFNs: boolean;
