@@ -147,8 +147,6 @@ begin
 
   case removeInvalidFNs of FALSE: EXIT; end;
 
-//  memo2.lines.insert(6, '@echo %time% :::');
-
   for var i := memo1.lines.count - 1 downto 0 do processInputFN(memo1.lines[i], i + 1, memo1.lines.count);
 
   var FP := extractFilePath(memo1.lines[0]);
@@ -302,13 +300,16 @@ begin
   memo2.lines.insert(12, '@echo encoded in %message%');
   memo2.lines.insert(12, 'call :elapsedTime ffmpegStart ffmpegEnd message');
   memo2.lines.insert(12, 'call :recordTime ffmpegEnd');
-  memo2.lines.insert(12, 'call :recordTime ffmpegStart');
   var numStr := format('[%.2d/%.2d] ', [fileNum, maxFiles]);
   memo2.lines.insert(12, '@echo ' + numStr + extractFileName(noAmps(inputFN)) + ': ' + formatFileSize(getFileSize(inputFN)));
+  memo2.lines.insert(12, '@title ' + numStr + extractFileName(noAmps(inputFN)));
+  memo2.lines.insert(12, 'call :recordTime ffmpegStart');
   memo2.lines.insert(12, '@echo %time% :::');
   memo2.lines.insert(12, ':: ===');
   memo2.lines.insert(16, ff);
-  memo2.lines.insert(16, format('@%s "%s" %s', ['ffprobe -v error -select_streams v:0 -show_entries format=duration -of ini', inputFN, '2>&1 | find "duration"']));
+//  memo2.lines.insert(16, format('@%s "%s" %s', ['ffprobe -v error -select_streams v:0 -show_entries format=duration -of ini', inputFN, '2>&1 | find "Duration"']));
+//  memo2.lines.insert(16, format('@%s "%s" %s', ['ffprobe ', inputFN, '2>&1 | find "Duration"'])); //   Duration: 00:25:02.40, start: 0.000000, bitrate: 5866 kb/s
+  memo2.lines.insert(16, format('@%s "%s"', ['ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=0 -sexagesimal ', inputFN])); // duration=0:25:02.400000
 end;
 
 function TForm1.removeInvalidFNs: boolean;
